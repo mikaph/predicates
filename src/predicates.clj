@@ -1,41 +1,70 @@
 (ns predicates)
 
 (defn sum-f [f g x]
-  :-)
+  (+ (f x) (g x)))
+
 
 (defn less-than [n]
-  :-)
+  (fn [x] (< x n)))
 
 (defn equal-to [n]
-  :-)
+  (fn [x] (== x n)))
 
-(defn set->predicate [a-set]
-  :-)
 
-(defn pred-and [pred1 pred2]
-  :-)
+(defn
+  set->predicate
+  [a-set]
+  (fn [x] (contains? a-set x)))
 
-(defn pred-or [pred1 pred2]
-  :-)
+
+(defn
+  pred-and
+  [pred1 pred2]
+  (fn [x] (and (pred1 x) (pred2 x))))
+
+
+(defn
+  pred-or
+  [pred1 pred2]
+  (fn [x] (or (pred1 x) (pred2 x) )))
 
 (defn whitespace? [character]
   (Character/isWhitespace character))
 
-(defn blank? [string]
-  :-)
 
-(defn has-award? [book award]
-  :-)
+(defn
+  blank?
+  [string]
+  (every? whitespace? string))
 
-(defn HAS-ALL-THE-AWARDS? [book awards]
-  :-)
+(defn
+  has-award?
+  [book award]
+  ((set->predicate (:awards book)) award))
 
-(defn my-some [pred a-seq]
-  :-)
 
-(defn my-every? [pred a-seq]
-  :-)
+(defn
+  HAS-ALL-THE-AWARDS?
+  [book awards]
+  (let [book-has-award? (set->predicate (:awards book))]
+  (every? book-has-award? awards)))
 
-(defn prime? [n]
-  :-)
+
+(defn
+  my-some
+  [pred a-seq]
+  (first (filter identity (map pred a-seq))))
+
+
+(defn
+  my-every?
+  [pred a-seq]
+  (= (count a-seq) (count (filter pred a-seq))))
+
+
+(defn
+  prime?
+  [n]
+  (not (my-some zero? (map #(mod n %) (range 2 n)))))
+
 ;^^
